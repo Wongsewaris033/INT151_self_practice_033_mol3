@@ -1,0 +1,36 @@
+Synchronus: งานที่ต้องรอคำสั่งก่อนหน้ารันให้เสร็จ งานนั้นถึงจะเริ่มทำได้
+
+Asynchronous: ทำหลายๆอย่างพร้อมกัน และไม่เกิดผลกระทบ(ความเสียหาย)
+
+Promise (class):
+- function ที่มีการคืนผลลัพธ์ = promise
+- function จะคืนค่า promise ที่เป็น “pending” มาก่อน ถ้า pending ได้ผลลัพธ์ที่ปกติจะได้เป็น “fulfilled” แต่ถ้าผลลัพธ์ที่ไม่ปกติ/ผิดออกมาจะได้เป็น “rejected”
+
+REST APIs: การติดต่อระหว่างเครื่องผ่าน http protocal ในแบบที่เป็นuniform ทั้งCRUD / เราจะส่ง format ที่เป็น JSON, XML
+
+JSON:
+- string
+- เก็บ string, num, arr, booleans, obj literals
+- ห้ามเป็น function / method
+
+npm i json-server: packageที่เป็น fake backend เสมือนเรามีเซิร์ฟเวอร์จริง
+
+Vite & โครงสร้างโปรเจกต์:
+- ใช้ Vite เพื่อให้โครงสร้างโปรเจกต์ดูเป็นระเบียบและเริ่มงานได้เร็วขึ้น
+- ช่วยให้การจัดการไฟล์และ workflow การทำงานง่ายขึ้น
+
+การ fetch กับไฟล์ .env:
+- URL backend แยกเก็บในไฟล์ .env ไม่เขียนลงโค้ดตรงๆ
+- ตอนรัน local -> อ่านจาก .env
+- ตอน deploy -> อ่านจาก .env.production
+- ใช้ import.meta.env.VITE_APP_URL เพื่อดึงค่า URL จาก env
+- ตัวแปรใน .env ต้องขึ้นต้นด้วย VITE_
+
+GET Method:
+- ใช้เพื่อขอข้อมูลจาก backend เอามาแสดงที่หน้าเว็บ
+- ไม่ได้แก้ไขหรือสร้างข้อมูลใหม่
+
+await:
+- fetch เป็นงาน async -> ข้อมูลไม่มาทันที
+- ต้อง await เพื่อรอ backend ตอบกลับก่อน
+- ถ้าไม่รอ -> ได้ค่า undefined หรือ promise แทนข้อมูลจริง
