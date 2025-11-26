@@ -1,0 +1,35 @@
+ทบทวนโจทย์จากโมดูลที่สอง เพื่อไม่ให้ลืมและสามารถนำมาต่อยอดในการเรียนโมดูลนี้หรือทำโปรเจ็คในอนาคตได้
+
+function setup() {
+    const messageBox = document.getElementById("messageBox");
+    messageBox.addEventListener("input", charCounting); //ผูก event “input” กับ textarea ทุกครั้งที่userพิมพ์ ลบ แก้ไขข้อความ -> ฟังก์ชัน charCounting() จะถูกเรียก
+
+    const toggle = document.getElementById("togglePassword");
+    toggle.addEventListener("click", changeDisplayMode); //ทุกครั้งที่user checkหรือcancel check -> ฟังก์ชัน changeDisplayMode() จะถูกเรียก
+}
+
+function charCounting() {
+    const input = document.getElementById("messageBox");
+    const counter = document.getElementById("charCount");
+    const length = input.value.length; //input.value = ข้อความที่อยู่ใน textarea / .length = จำนวนตัวอักษรทั้งหมด(เก็บผลไว้ในตัวแปร length)
+
+    counter.textContent = `Characters: ${length} / 150`; //เปลี่ยนข้อความข้างใน <p id="charCount"> ให้แสดงจำนวนล่าสุด(textContent)
+
+    if (length > 150) {
+        counter.classList.add("red"); //เพิ่มclass "red" ทำให้ตัวหนังสือเป็นสีแดง(add)
+    } else {
+        counter.classList.remove("red"); //เอาคลาสสีแดงออก ทำให้กลับมาเป็นสีดำ(remove)
+    }
+}
+
+function changeDisplayMode() {
+    const passwordInput = document.getElementById("password");
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text"; //เปลี่ยน type ให้เป็น text ขฬ ตัวอักษรแสดง
+    } else {
+        passwordInput.type = "password"; //เปลี่ยน type กลับไปเป็น password -> ซ่อนตัวอักษร
+    }
+}
+
+setup();
