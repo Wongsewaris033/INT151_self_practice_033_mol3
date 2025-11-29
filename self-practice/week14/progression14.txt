@@ -1,0 +1,36 @@
+func showDialog() เปิด dialog และ รอuserกดปุ่ม (เป็น Promise)
+เมื่อกดปุ่มcancel ปิด dialog แล้ว resolve() ส่งค่าชื่อปุ่มกลับไป
+await showDialog() จะได้ผลลัพธ์ เช่น "OK" หรือ "Cancel"
+
+จากนั้นเช็คผลลัพธ์:
+    - ถ้ามีคำว่า "ok" -> ไปทำ action ของ OK
+    - ถ้ามีคำว่า "cancel" -> ไปทำ action ของ Cancel
+    - พอทำเสร็จ พิมพ์ "good bye"
+
+--------------------
+
+-- DateTime --
+- สร้างวันที่ปัจจุบันได้ด้วย new Date() หรือ new Date(Date.now())
+- สร้างจาก string แบบมาตรฐาน ISO8601 เช่น "2025-12-09T10:25:00"
+- ถ้าใช้รูปแบบ new Date(year, monthIndex, day, ...) ให้จำว่า monthIndex เริ่มที่ 0 (0 = January)
+- String แบบ ISO สามารถมี timezone ต่อท้าย เช่น +07:00 หรือ Z (UTC)
+- ระบบมักเก็บเวลาเป็น UTC เพื่อให้ค่าเวลาคงที่ไม่ว่าuserอยู่ประเทศไหน
+- เวลาแสดงผลต่อผู้ใช้ควรแปลงเป็น Local Time ตามtimezoneของเขา เช่น ไทยเป็น "Asia/Bangkok" (UTC+07)
+- เวลาใน JS จริงๆ เก็บเป็น milliseconds (timestamp) และแปลงไปมาให้เอง
+
+- toString()
+    - แสดงตาม timezone ของเครื่องuser
+    - ไม่สามารถกำหนดรูปแบบได้
+
+- toLocaleString(locale, options)
+    - เลือกภาษา เช่น "th-TH" / "en-US"
+    - สามารถกำหนด timezone, รูปแบบวัน/เวลา, ชื่อวัน เดือน ปี etc.
+
+- Intl.DateTimeFormat()
+    - controlการแสดงผลได้ละเอียดกว่า
+    - เหมาะสำหรับระบบที่ต้องรองรับหลายภาษา (i18n)
+
+- ดึงค่า timezone / locale ของuser: ใช้ Intl.DateTimeFormat().resolvedOptions()
+- สามารถใช้ >, <, <=, >= ได้โดยตรง เพราะ JS จะเปรียบเทียบเป็น millisecond ให้เอง
+- ถ้าต้องการเทียบแบบเหมือนกันหมด ใช้ getTime() เช่น date1.getTime() === date2.getTime()
+- ควรให้เวลา “อยู่ใน timezone เดียวกัน” ก่อนเทียบ เช่น แปลงเป็น UTC ด้วย toISOString()
