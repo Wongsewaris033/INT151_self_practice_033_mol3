@@ -1,0 +1,52 @@
+> JavaScript พื้นฐานในโปรเจกต์ <
+- ใช้ event listener เพื่อผูก action ให้ element เช่น input, click เพื่อให้เว็บreact to userแบบโต้ตอบได้
+- charCounting() -> ใช้ตรวจจำนวนตัวอักษรใน input และเปลี่ยนสีเมื่อเกิน 150 เพื่อเตือนผู้ใช้แบบreal time
+- changeDisplayMode() ->  สลับโหมดของ password เป็น text เพื่อให้ผู้ใช้ดูpasswordที่พิมพ์ได้ง่ายขึ้น
+- ใช้ <dialog> ทำ custom dialog ร่วมกับ JS เช่น showModal() และ close() เพื่อสร้าง popup แบบ native และใช้ง่าย
+
+> Sync vs Async / Promise <
+- Synchronous -> ทำงานตามลำดับทีละบรรทัดเสมอ ทำให้บางงานต้องรอจนกว่าอันก่อนหน้าจะจบก่อน
+- Asynchronous -> แยกงานไปทำเบื้องหลัง เช่น fetch() แล้วให้โปรแกรมทำอย่างอื่นต่อได้ ไม่ต้องรอ
+- Promise มี 3 สถานะ: pending -> fulfilled / rejected ช่วยจัดการงานที่รอผลลัพธ์
+- ฟังก์ชัน async ต้องใช้ await เพื่อรอค่าแบบอ่านง่ายกว่าการใช้ callback เยอะ
+
+> REST API + JSON + Fetch <
+- REST API ใช้หลักการ CRUD ผ่าน HTTP เพื่อคุยกับ backend อย่างเป็นระบบ
+- JSON ใช้เก็บข้อมูลแบบพื้นฐาน เช่น string, number, array และ object ทำให้แลกข้อมูลระหว่างระบบได้ง่าย
+- ใช้ไฟล์ .env เก็บ URL backend และดึงค่าผ่าน import.meta.env.VITE_* ทำให้ config แยกจากโค้ด
+- เวลาทำ fetch: ต้อง await, ใช้ try...catch, และเช็ค res.ok หรือ res.status ก่อนใช้ข้อมูล
+- ความหมาย method:
+    - GET -> อ่านข้อมูลจาก server
+    - POST -> เพิ่มข้อมูลใหม่ (ปกติจะได้ 201)
+    - PUT -> แก้ไขข้อมูลเดิมทั้งหมด
+    - DELETE -> ลบข้อมูล (เช็คจาก res.ok)
+
+> Date & Time <
+- สร้าง obj เวลาได้ด้วย new Date() เพื่อใช้จัดการเวลาในระบบ
+- ต้องระวังเรื่อง timezone เพราะค่าที่แสดงอาจต่างกันขึ้นกับเครื่องของuser
+- ใช้ toLocaleString() หรือ Intl.DateTimeFormat() เพื่อ format วันเวลาให้ตรงตามภูมิภาค
+- เวลาทุกอย่างใน JS เปรียบเทียบกันด้วย millisecond ทำให้คำนวณต่างๆ ได้แม่นยำ เพราะมีความละเอียดสูงมากกว่าการที่จะมานับเป็น second
+
+> Keycloak (Authentication) <
+- เป็นระบบ Authentication/Authorization ที่ช่วยจัดการ login, logout และ roles ของuser
+- หลังจาก login จะได้ JWT Token มายืนยันสิทธิ์ในทุก req
+- ข้อมูลuserดึงได้จาก keycloak.tokenParsed เช่น username หรือ email
+- function ที่ใช้บ่อย: init() เริ่มระบบ, login() เข้าสู่ระบบ, logout() ออกจากระบบ, updateToken() ต่ออายุ token
+
+> Cypress (E2E Testing) <
+- ใช้ทดสอบเว็บแบบ End-to-End ทำให้เห็นว่า user ใช้งานจริงแล้วเว็บทำงานถูกต้องหรือไม่
+- Cypress กด/คลิกได้เฉพาะ element ที่ มองเห็น, เปิดใช้งาน, และ อยู่ใน DOM จริง
+- คำสั่งหลักที่ใช้บ่อย: cy.get(), .click(), .type(), .should() เพื่อจำลองการใช้งาน
+- ถ้ามีปัญหา -> “ห้ามแก้ Cypress” แต่ต้องไปแก้ DOM/UI ให้ element อยู่ในสภาพที่ Cypress ใช้งานได้
+
+> Vite <
+- เป็น dev server + build tool ที่เร็วมาก เพราะใช้ Native ESM ทำให้เริ่มต้นและโหลดไฟล์เร็ว
+- รองรับ HMR (Hot Module Replacement) ที่เร็วมาก ช่วยให้แก้โค้ดแล้วหน้าเว็บอัปเดตทันที
+- ใช้ .env เก็บ config และดึงผ่าน import.meta.env ทำให้จัดการ environment ง่าย
+- เวลา build จะใช้ Rollup ทำให้ไฟล์ production เล็กลงและโหลดเร็ว
+- รองรับframeworkหลักๆ เช่น React, Vue, Svelte รวมถึง Vanilla JS
+
+> Rollup (เมื่อใช้กับ Vite build) <
+- เป็น bundler ที่ให้ output เล็กและอ่านง่าย เพราะไม่ห่อโค้ดเกินจำเป็น
+- มีประสิทธิภาพสูงด้าน tree-shaking(“ลบโค้ดที่ไม่ได้ถูกใช้งานออกจาก bundle” ตอน build เพื่อทำให้ไฟล์สุดท้ายเล็กลงและโหลดเร็วขึ้น) ช่วยลบโค้ดที่ไม่ได้ใช้ออกไปเพื่อลดขนาด bundle
+- ใช้บ่อยใน production build และเป็นตัวเลือกยอดนิยมในการทำ library เพราะปรับ output format ได้หลายแบบ
