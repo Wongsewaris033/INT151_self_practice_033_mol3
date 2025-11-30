@@ -1,0 +1,88 @@
+< Self Learning บางหัวข้อจาก Integrated Project >
+< ส่วนใหญ่จะเอาข้อมูลมาจากแชทเจนมาให้และหาเองด้วย >
+
+-- Keycloak --
+- เป็นระบบ Identity & Access Management (IAM) ใช้จัดการ Login, Logout, User, Role, Permission
+- รองรับ OAuth2, OpenID Connect, SAML2
+- ใช้ในเว็บทั่วไปเพื่อไม่ต้องเขียนระบบ authentication เอง เหมือนเป็นระบบ authen ที่เป็นframeworkมาให้อยู่แล้ว แล้วเรากำหนดข้อมูลต่างๆลงไปเพื่อให้ตรงกับจุดประสงค์ของเรา
+- เมื่อผู้ใช้ล็อกอิน Keycloak จะส่ง JWT Token (Access Token, Refresh Token)
+- ข้อมูลuserดูได้จาก
+    - keycloak.tokenParsed เช่น preferred_username, email, roles
+- ตรวจสอบสถานะผู้ใช้:
+    - keycloak.authenticated -> true/false
+- คำสั่งที่ใช้บ่อย:
+    - keycloak.init() -> เริ่มต้นระบบ
+    - keycloak.login() -> บังคับให้ผู้ใช้เข้าสู่ระบบ
+    - keycloak.logout() -> ออกจากระบบ
+    - keycloak.updateToken() -> รีเฟรช token
+- ใช้ประกาศ user id ทั่วเว็บ เช่นดึง studentId จาก token
+- นิยมใช้ร่วมกับ backend เพื่อเช็คสิทธิ์ (authorize) 
+
+-- Dialog --
+- dialog แบบ native (basic func ของ browser)
+    - alert("text") -> แจ้งข้อความ
+    - confirm("text") -> OK / Cancel
+    - prompt("message") -> รับข้อมูลจากผู้ใช้
+    - ใช้งานง่ายแต่ ปรับแต่ง UI ไม่ได้
+- HTML element ที่สร้าง popup ได้โดยไม่ต้องพึ่ง library
+- มี 2 method:
+    - dialog.show() -> เปิดแบบไม่บล็อกพื้นหลัง
+    - dialog.showModal() -> เปิดแบบบล็อกพื้นหลัง
+- ปิด dialog ด้วย dialog.close()
+- สามารถเพิ่ม CSS, animation, ปุ่มต่าง ๆ ได้ เช่นเราอยากให้addปุ่ม ok, cancel, keep ใน dialog นั้นเพื่อให้สามารถredirect / navigate ไปที่หน้าอื่นหรือจะไปทำอย่างอื่นต่อได้ตามที่เราต้องการ
+- ใช้ง่ายสำหรับการสร้าง:
+    - modal แจ้งเตือน
+    - popup ยืนยันข้อมูล
+- เขียน JS เช่น:
+    dialog.showModal()
+    document.getElementById("closeBtn").onclick = () => dialog.close()
+
+-- Cypress --
+- เป็นเครื่องมือสำหรับ End-to-End Test (E2E) สำหรับเว็บ
+    > (E2E: การทดสอบระบบแบบครบกระบวนการตั้งแต่ต้นจนจบ เสมือนผู้ใช้งานจริง เพื่อให้มั่นใจว่าฟีเจอร์ต่าง ๆ ทำงานร่วมกันได้ถูกต้อง) <
+- ทำงานใน browser จริง -> จำลองการใช้งาน user ได้
+- Cypress จะทำ action ก็ต่อเมื่อ element:
+    - มองเห็น (visible)
+    - ไม่ถูก disable
+    - ไม่โหลดช้ากว่าที่เราได้ set time ไว้ในโค้ด cypress
+- ถ้า element display: none -> Cypress จะไม่ยอมคลิก
+- คำสั่งที่ใช้บ่อย:
+    - cy.get(selector) → หา element
+    - .click() → คลิกปุ่ม
+    - .type() → พิมพ์ข้อความ
+    - .should() → ตรวจสอบค่าหรือสถานะ
+- Cypress รอ DOM ให้นิ่งก่อนทำงานเอง (auto-waiting)
+- ปัญหาพบบ่อยทั้งในที่หาข้อมูลภายนอกมา และเจอเองในโปรเจ็ค:
+    - selector ผิด
+    - element มองไม่เห็น
+    - element ถูกสร้างหลังจาก action -> ต้องรอให้แสดงขึ้นมา
+- !!ไม่ควรแก้ Cypress แต่ควรแก้ UI / DOM / state ให้ถูกต้องแทน!! (ตรงนี้เจอบ่อยในโปรเจ็คเพราะบางทีโค้ดcypressที่อาจารย์ให้มาอาจจะมีการผิดพลาดบ้างแต่ก็มีไปแก้เพื่อดูว่าจริงๆแล้วมันผิดตรงไหนและควรแก้ที่ใครหรือแก้ตรงไหน)
+- ใช้ดีสำหรับการทดสอบ workflow เช่น login, CRUD, form, modal, dropdown
+
+-- Vite --
+- คือ dev server + build tool ที่เร็วมากสำหรับ frontend
+- ทำงานเร็วเพราะใช้ Native ES Modules (ESM)
+    > ระบบ import/export แบบมาตรฐานของ JavaScript ที่เบราว์เซอร์และ Node.js รองรับโดยไม่ต้องใช้ bundler หรือ transpiler เพิ่มเติม <
+        > Bundler และ Transpiler เป็นเครื่องมือในงานพัฒนาเว็บที่ช่วยให้โค้ดสามารถรันได้บนเบราว์เซอร์หรือสภาพแวดล้อมที่รองรับไม่เหมือนกัน <
+            > Bundler = เครื่องมือที่ “รวมไฟล์หลาย ๆ ไฟล์” ให้เป็นไฟล์เดียวหรือไม่กี่ไฟล์ เพื่อให้เบราว์เซอร์โหลดได้เร็วขึ้น และจัดการ dependency ให้เรียบร้อย <
+            > Transpiler = เครื่องมือที่ “แปลงโค้ดจากภาษา A → ภาษา A เวอร์ชันอื่น” เพื่อให้รองรับในสภาพแวดล้อมที่ไม่ทันสมัย <
+- Hot Module Replacement (HMR) ที่เร็วสุด
+    > ระบบ HMR ที่ใช้ native ES modules + dev server ที่เขียนด้วย Go/Rust ซึ่งแทบไม่ต้อง rebuild ใหม่ทั้ง bundle <
+- รองรับ framework ทั่วไป: React, Vue, Svelte, Vanilla JS
+- คำสั่งพื้นฐาน:
+    - npm create vite@latest -> สร้างโปรเจกต์
+    - npm run dev -> เริ่ม dev server (สร้างลิงค์มาให้กดและสามารถกดจากterminal เพื่อดูบนbrowserได้เลย)
+- Configuration file: vite.config.js
+- รองรับ environment variables เช่น .env, .env.development
+- Build ใช้ Rollup -> output เบาและเหมาะสำหรับ production
+    > JavaScript Bundler ที่เน้นให้ผลลัพธ์ (output) เบา สะอาด และ optimize สูง โดยเฉพาะเมื่อใช้กับ ES Modules (ESM) <
+    > rollupOptions: {
+      input: {
+        main: './index.html',
+        reserve: './reserve.html'
+      }
+    } //ตัวอย่างที่ใช้ในโปรเจ็คในส่วนของไฟล์ vite.config.js
+- เพิ่ม plugin ได้ เช่น
+    - @vitejs/plugin-react
+    - plugin สำหรับ Vue หรือ TypeScript
+- เหมาะมากสำหรับโปรเจกต์ที่ต้องการความเร็วระหว่างพัฒนา
